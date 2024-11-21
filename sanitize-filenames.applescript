@@ -31,7 +31,7 @@ on sanitizeFilename(fName)
     set fName to my toLowerCase(fName)
 
     -- Define a list of special characters you want to remove.
-    set specialChars to {"(", ")", "#", "*", "^", "!", "\\", "|", ",", ":", "%", ".", "?", "\"", "'", "~", "/", "=", ";", "{", "}"}
+    set specialChars to {"(", ")", "#", "*", "^", "!", "\\", "|", ",", ":", "%", "?", "\"", "'", "~", "/", "=", ";", "{", "}"}
 
     -- Loop over each special character and remove it from the filename.
     repeat with thisChar in specialChars

@@ -30,8 +30,11 @@ on sanitizeFilename(fName)
     -- Convert filename to lowercase.
     set fName to my toLowerCase(fName)
 
+    -- Remove accents
+    set fName to my removeAccents(fName)
+
     -- Define a list of special characters you want to remove.
-    set specialChars to {"(", ")", "#", "*", "^", "!", "\\", "|", ",", ":", "%", "?", "\"", "'", "~", "/", "=", ";", "{", "}"}
+    set specialChars to {"(", ")", "#", "*", "^", "!", "$", "\\", "|", ",", ":", "%", "?", "\"", "'", "~", "/", "=", ";", "{", "}"}
 
     -- Loop over each special character and remove it from the filename.
     repeat with thisChar in specialChars
@@ -45,8 +48,15 @@ on sanitizeFilename(fName)
     -- Replace "&" with "and".
     set fName to my replaceText(fName, "&", "and")
 
+    -- Remove duplicate dashes
+    set fName to my replaceText(fName, "-----", "-")
+    set fName to my replaceText(fName, "----", "-")
+    set fName to my replaceText(fName, "---", "-")
+    set fName to my replaceText(fName, "--", "-")
+
     -- Remove any trailing dashes before the file extension
     set fName to my replaceText(fName, "-.", ".")
+    set fName to my replaceText(fName, "-@", "@")
 
     return fName
 end sanitizeFilename
@@ -69,3 +79,20 @@ on toLowerCase(theText)
     set theLowerText to do shell script "echo " & quoted form of theText & " | tr '[:upper:]' '[:lower:]'"
     return theLowerText
 end toLowerCase
+
+-- Handler to remove accents from characters.
+on removeAccents(theText)
+    set accentedChars to "áàâãäåçéèêëíìîïñóòôõöúùûü?ÿ"
+    set unaccentedChars to "aaaaaaceeeeiiiinooooouuuuyy"
+	
+    set newText to ""
+    repeat with i from 1 to (length of theText)
+        set thisChar to character i of theText
+        set accentIndex to offset of thisChar in accentedChars
+        if accentIndex is not 0 then
+            set thisChar to character accentIndex of unaccentedChars
+        end if
+        set newText to newText & thisChar
+    end repeat
+    return newText
+end removeAccents
